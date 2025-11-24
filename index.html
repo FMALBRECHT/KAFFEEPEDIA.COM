@@ -1,932 +1,213 @@
 <!DOCTYPE html>
 <html lang="en" data-theme="light">
-<head>
-  <meta charset="UTF-8" />
-  <title>Kaffeepedia — The World’s Coffee Encyclopedia</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <meta name="description" content="Kaffeepedia is the global encyclopedia and university of coffee science: botany, chemistry, physics, roasting, brewing, sensory, and Kaffeducation." />
-  <style>
-    :root {
-      /* LIGHT MODE – TUM-inspired */
-      --bg: #f5f7fa;
-      --bg-elevated: #ffffff;
-      --nav-bg: #0b1f35;            /* dark navy header */
-      --text-main: #111111;
-      --text-soft: #50566a;
-      --accent: #1366bf;            /* KAFFEEPEDIA BLUE */
-      --accent-soft: #d2e4ff;
-      --border-subtle: #dde0ea;
-      --shadow-soft: 0 18px 40px rgba(15, 23, 42, 0.08);
-      --max-width: 1120px;
-    }
-
-    [data-theme="dark"] {
-      /* DARK MODE – navy + glow blue */
-      --bg: #05060a;
-      --bg-elevated: #0b1f35;
-      --nav-bg: #05060a;
-      --text-main: #f5f7fa;
-      --text-soft: #a1a8c4;
-      --accent: #3d74ff;            /* glow blue in dark mode */
-      --accent-soft: #18264a;
-      --border-subtle: #273452;
-      --shadow-soft: 0 24px 60px rgba(0, 0, 0, 0.65);
-    }
-
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-    }
-
-    html, body {
-      scroll-behavior: smooth;
-    }
-
-    body {
-      font-family: system-ui, -apple-system, BlinkMacSystemFont, "SF Pro Text",
-        "Helvetica Neue", Arial, sans-serif;
-      background: radial-gradient(circle at top, #ffffff 0, var(--bg) 40%, var(--bg) 100%);
-      color: var(--text-main);
-      line-height: 1.6;
-    }
-
-    .page {
-      min-height: 100vh;
-      display: flex;
-      flex-direction: column;
-    }
-
-    /* NAVBAR – dark navy bar, TUM vibe */
-    header {
-      position: sticky;
-      top: 0;
-      z-index: 50;
-      backdrop-filter: blur(20px);
-      background: var(--nav-bg);
-      border-bottom: 1px solid rgba(255, 255, 255, 0.04);
-    }
-
-    .nav {
-      max-width: var(--max-width);
-      margin: 0 auto;
-      padding: 10px 18px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 12px;
-      color: #f5f7fa;
-    }
-
-    .nav-left {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-    }
-
-    .logo-circle {
-      width: 30px;
-      height: 30px;
-      border-radius: 50%;
-      border: 1px solid rgba(255, 255, 255, 0.24);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      background: rgba(5, 8, 13, 0.9);
-      box-shadow: 0 4px 12px rgba(0,0,0,0.4);
-    }
-
-    .logo-bean {
-      width: 10px;
-      height: 16px;
-      border-radius: 999px;
-      border: 1px solid var(--accent);
-      position: relative;
-    }
-
-    .logo-bean::before {
-      content: "";
-      position: absolute;
-      left: 50%;
-      top: 1px;
-      width: 1px;
-      height: 14px;
-      background: var(--accent);
-      transform: translateX(-50%);
-    }
-
-    .brand-name {
-      font-size: 0.95rem;
-      letter-spacing: 0.22em;
-      text-transform: uppercase;
-      color: #f5f7fa;
-    }
-
-    .nav-links {
-      display: flex;
-      gap: 16px;
-      font-size: 0.88rem;
-      color: rgba(245, 247, 250, 0.8);
-    }
-
-    .nav-links a {
-      text-decoration: none;
-      color: inherit;
-      position: relative;
-      padding-bottom: 2px;
-    }
-
-    .nav-links a::after {
-      content: "";
-      position: absolute;
-      left: 0;
-      bottom: 0;
-      width: 0;
-      height: 1px;
-      background: var(--accent);
-      transition: width 0.18s ease;
-    }
-
-    .nav-links a:hover::after {
-      width: 100%;
-    }
-
-    .nav-right {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      flex-shrink: 0;
-    }
-
-    .badge {
-      font-size: 0.7rem;
-      text-transform: uppercase;
-      letter-spacing: 0.18em;
-      border-radius: 999px;
-      border: 1px solid rgba(255, 255, 255, 0.28);
-      padding: 4px 10px;
-      color: rgba(245, 247, 250, 0.76);
-      white-space: nowrap;
-      background: rgba(11, 31, 53, 0.6);
-    }
-
-    .theme-toggle {
-      border-radius: 999px;
-      border: 1px solid rgba(255, 255, 255, 0.28);
-      padding: 4px 10px;
-      font-size: 0.8rem;
-      background: rgba(5, 8, 13, 0.9);
-      color: rgba(245, 247, 250, 0.9);
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      gap: 6px;
-    }
-
-    .theme-toggle span {
-      font-size: 1rem;
-      line-height: 1;
-    }
-
-    @media (max-width: 820px) {
-      .nav {
-        flex-wrap: wrap;
-        row-gap: 8px;
-      }
-      .nav-links {
-        display: none; /* simple mobile for now */
-      }
-    }
-
-    main {
-      flex: 1;
-    }
-
-    .section {
-      max-width: var(--max-width);
-      margin: 0 auto;
-      padding: 48px 18px 32px;
-    }
-
-    /* HERO – Apple simplicity + encyclopedia search */
-    .hero {
-      display: grid;
-      grid-template-columns: minmax(0, 3.2fr) minmax(0, 2.3fr);
-      gap: 32px;
-      padding-top: 44px;
-      padding-bottom: 30px;
-    }
-
-    @media (max-width: 900px) {
-      .hero {
-        grid-template-columns: 1fr;
-      }
-    }
-
-    .hero-eyebrow {
-      font-size: 0.8rem;
-      text-transform: uppercase;
-      letter-spacing: 0.2em;
-      color: var(--text-soft);
-      margin-bottom: 10px;
-    }
-
-    .hero-title {
-      font-size: clamp(2.1rem, 4vw, 2.7rem);
-      line-height: 1.1;
-      margin-bottom: 14px;
-    }
-
-    .hero-subtitle {
-      font-size: 0.98rem;
-      color: var(--text-soft);
-      margin-bottom: 18px;
-      max-width: 32rem;
-    }
-
-    .hero-search {
-      margin-bottom: 14px;
-    }
-
-    .search-shell {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      background: var(--bg-elevated);
-      border-radius: 999px;
-      border: 1px solid var(--border-subtle);
-      padding: 6px 10px 6px 12px;
-      box-shadow: var(--shadow-soft);
-      max-width: 420px;
-    }
-
-    .search-icon {
-      font-size: 0.9rem;
-      opacity: 0.7;
-    }
-
-    .search-input {
-      border: none;
-      outline: none;
-      flex: 1;
-      background: transparent;
-      font-size: 0.9rem;
-      color: var(--text-main);
-    }
-
-    .search-input::placeholder {
-      color: var(--text-soft);
-    }
-
-    .search-badge {
-      font-size: 0.7rem;
-      padding: 3px 8px;
-      border-radius: 999px;
-      border: 1px solid var(--border-subtle);
-      color: var(--text-soft);
-      white-space: nowrap;
-      background: var(--bg);
-    }
-
-    .hero-meta {
-      font-size: 0.84rem;
-      color: var(--text-soft);
-      margin-bottom: 20px;
-    }
-
-    .hero-cta-row {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 12px;
-      align-items: center;
-      margin-bottom: 10px;
-    }
-
-    .btn-primary {
-      border-radius: 999px;
-      border: none;
-      padding: 9px 18px;
-      font-size: 0.9rem;
-      background: linear-gradient(
-        135deg,
-        var(--accent),
-        color-mix(in srgb, var(--accent) 80%, #ffffff 20%)
-      );
-      color: #ffffff;
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      text-decoration: none;
-      cursor: pointer;
-      box-shadow: 0 10px 30px rgba(0,0,0,0.18);
-    }
-
-    .btn-secondary {
-      border-radius: 999px;
-      border: 1px solid var(--border-subtle);
-      padding: 8px 16px;
-      font-size: 0.85rem;
-      background: var(--bg-elevated);
-      color: var(--text-main);
-      text-decoration: none;
-      cursor: pointer;
-    }
-
-    .hero-note {
-      font-size: 0.8rem;
-      color: var(--text-soft);
-    }
-
-    /* Right hero card */
-    .hero-card {
-      background: radial-gradient(circle at top left, var(--accent-soft) 0, var(--bg-elevated) 38%, var(--bg-elevated) 100%);
-      border-radius: 24px;
-      border: 1px solid var(--border-subtle);
-      padding: 20px 18px 18px;
-      box-shadow: var(--shadow-soft);
-      position: relative;
-      overflow: hidden;
-    }
-
-    .hero-card::after {
-      content: "";
-      position: absolute;
-      width: 220px;
-      height: 220px;
-      border-radius: 50%;
-      border: 1px solid color-mix(in srgb, var(--accent) 48%, transparent);
-      top: -60px;
-      right: -80px;
-      opacity: 0.35;
-    }
-
-    .hero-card-title {
-      font-size: 0.9rem;
-      text-transform: uppercase;
-      letter-spacing: 0.18em;
-      color: var(--text-soft);
-      margin-bottom: 10px;
-    }
-
-    .hero-card-main {
-      font-size: 0.96rem;
-      margin-bottom: 12px;
-    }
-
-    .hero-card-list {
-      list-style: none;
-      font-size: 0.88rem;
-      color: var(--text-soft);
-      margin-bottom: 10px;
-    }
-
-    .hero-card-list li {
-      padding: 3px 0;
-    }
-
-    .pill-row {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 6px;
-      margin-top: 8px;
-    }
-
-    .pill {
-      font-size: 0.75rem;
-      border-radius: 999px;
-      border: 1px solid var(--border-subtle);
-      padding: 4px 8px;
-      color: var(--text-soft);
-      background: color-mix(in srgb, var(--bg-elevated) 80%, var(--accent-soft) 20%);
-    }
-
-    .section-heading {
-      font-size: 1.05rem;
-      text-transform: uppercase;
-      letter-spacing: 0.22em;
-      color: var(--text-soft);
-      margin-bottom: 10px;
-    }
-
-    .section-title {
-      font-size: 1.6rem;
-      margin-bottom: 6px;
-    }
-
-    .section-subtitle {
-      font-size: 0.95rem;
-      color: var(--text-soft);
-      margin-bottom: 18px;
-      max-width: 34rem;
-    }
-
-    .grid-3 {
-      display: grid;
-      grid-template-columns: repeat(3, minmax(0, 1fr));
-      gap: 18px;
-    }
-
-    @media (max-width: 900px) {
-      .grid-3 {
-        grid-template-columns: 1fr;
-      }
-    }
-
-    .card {
-      background: var(--bg-elevated);
-      border-radius: 18px;
-      border: 1px solid var(--border-subtle);
-      padding: 16px 16px 18px;
-      box-shadow: 0 10px 28px rgba(0,0,0,0.05);
-      transform: translateY(0);
-      transition: transform 0.18s ease, box-shadow 0.18s ease, border-color 0.18s ease;
-    }
-
-    .card:hover {
-      transform: translateY(-3px);
-      border-color: color-mix(in srgb, var(--accent) 40%, var(--border-subtle) 60%);
-      box-shadow: 0 18px 40px rgba(0,0,0,0.10);
-    }
-
-    .card-label {
-      font-size: 0.78rem;
-      text-transform: uppercase;
-      letter-spacing: 0.18em;
-      color: var(--text-soft);
-      margin-bottom: 6px;
-    }
-
-    .card-title {
-      font-size: 1.02rem;
-      margin-bottom: 6px;
-    }
-
-    .card-body {
-      font-size: 0.9rem;
-      color: var(--text-soft);
-    }
-
-    .topics-grid {
-      display: grid;
-      grid-template-columns: minmax(0, 2.1fr) minmax(0, 1.9fr);
-      gap: 18px;
-    }
-
-    @media (max-width: 900px) {
-      .topics-grid {
-        grid-template-columns: 1fr;
-      }
-    }
-
-    .topics-panel {
-      background: var(--bg-elevated);
-      border-radius: 18px;
-      border: 1px solid var(--border-subtle);
-      padding: 16px 16px 18px;
-      box-shadow: var(--shadow-soft);
-    }
-
-    .topics-list {
-      display: grid;
-      grid-template-columns: repeat(2, minmax(0, 1fr));
-      gap: 8px 16px;
-      font-size: 0.88rem;
-      color: var(--text-soft);
-    }
-
-    @media (max-width: 600px) {
-      .topics-list {
-        grid-template-columns: 1fr;
-      }
-    }
-
-    .topics-list span {
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-    }
-
-    .bullet {
-      width: 7px;
-      height: 7px;
-      border-radius: 999px;
-      background: var(--accent);
-      flex-shrink: 0;
-    }
-
-    footer {
-      border-top: 1px solid var(--border-subtle);
-      margin-top: 40px;
-      padding: 16px 18px 20px;
-      font-size: 0.78rem;
-      color: var(--text-soft);
-      background: #0b1f35;
-      color: #d5d9e8;
-    }
-
-    .footer-inner {
-      max-width: var(--max-width);
-      margin: 0 auto;
-      display: flex;
-      flex-wrap: wrap;
-      gap: 10px;
-      justify-content: space-between;
-      align-items: center;
-    }
-
-    .footer-links {
-      display: flex;
-      gap: 12px;
-      flex-wrap: wrap;
-    }
-
-    .footer-links a {
-      color: #e0e4f5;
-      text-decoration: none;
-    }
-
-    .footer-links a:hover {
-      text-decoration: underline;
-    }
-
-    /* FADE-IN SECTIONS */
-    .reveal {
-      opacity: 0;
-      transform: translateY(22px);
-      transition: opacity 0.5s ease-out, transform 0.5s ease-out;
-    }
-
-    .reveal.visible {
-      opacity: 1;
-      transform: translateY(0);
-    }
-
-    .reveal-delay-1 {
-      transition-delay: 0.05s;
-    }
-
-    .reveal-delay-2 {
-      transition-delay: 0.12s;
-    }
-
-    .reveal-delay-3 {
-      transition-delay: 0.18s;
-    }
-  </style>
-</head>
-<body>
-  <div class="page">
-    <header>
-      <div class="nav">
-        <div class="nav-left">
-          <div class="logo-circle">
-            <div class="logo-bean"></div>
-          </div>
-          <div class="brand-name">KAFFEEPEDIA</div>
-        </div>
-        <nav class="nav-links">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=1120, initial-scale=1.0" />
+    <meta name="description" content="Kaffeepedia — The world’s coffee encyclopedia and university. Science-based, academic, impartial knowledge for the specialty coffee world." />
+    <title>Kaffeepedia — The World’s Coffee Encyclopedia & University</title>
+    <link rel="stylesheet" href="style.css" />
+    <link rel="icon" href="favicon.ico" />
+  </head>
+  <body>
+    <!-- Header / Navigation -->
+    <header id="nav" class="nav">
+      <div class="nav-inner">
+        <a href="/" class="nav-left">
+          <span class="logo-circle">
+            <!-- Placeholder coffee bean SVG -->
+            <svg width="28" height="28" fill="none" viewBox="0 0 28 28">
+              <ellipse cx="14" cy="14" rx="10" ry="13" stroke="currentColor" stroke-width="2"/>
+              <path d="M14 5Q17 14 14 23" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+            </svg>
+          </span>
+          <span class="wordmark">KAFFEEPEDIA</span>
+        </a>
+        <nav class="nav-center desktop-nav">
           <a href="#enzyklopaedie">Enzyklopädie</a>
           <a href="#kaffeducation">Kaffeducation</a>
           <a href="#science">Coffee Science</a>
-          <a href="#ai">Coffee&nbsp;AI</a>
+          <a href="#ai">Coffee AI</a>
         </nav>
         <div class="nav-right">
-          <button class="theme-toggle" id="themeToggle" type="button" aria-label="Toggle theme">
-            <span id="themeIcon">🌞</span>
-            <span id="themeLabel">Light</span>
+          <button id="theme-toggle" class="theme-toggle" title="Toggle theme" aria-label="Toggle theme">
+            <span class="toggle-icon" id="theme-icon">🌞</span>
+            <span class="toggle-label" id="theme-label">Light</span>
           </button>
-          <div class="badge">Phase 0 · In development</div>
+          <span class="dev-pill">PHASE 0 · IN DEVELOPMENT</span>
         </div>
       </div>
     </header>
 
     <main>
-      <!-- HERO -->
-      <section class="section hero reveal">
-        <div>
-          <div class="hero-eyebrow">The future home of</div>
-          <h1 class="hero-title">The World’s Coffee Encyclopedia & University</h1>
-          <p class="hero-subtitle">
-            Kaffeepedia unites coffee biology, chemistry, physics, sensory science,
-            roasting, brewing, and education into one coherent system — from farm
-            and fermentation to extraction and perception.
-          </p>
-
-          <div class="hero-search">
-            <div class="search-shell">
-              <span class="search-icon">🔎</span>
-              <input
-                class="search-input"
-                type="search"
-                placeholder="Search varieties, extraction, water, roasting, sensory..."
-                aria-label="Search Kaffeepedia (coming soon)"
-                disabled
-              />
-              <span class="search-badge">Search coming soon</span>
+      <!-- Hero Section -->
+      <section class="section hero-section reveal">
+        <div class="hero-grid">
+          <div class="hero-left">
+            <div class="section-heading">The future home of</div>
+            <h1 class="section-title">The World’s Coffee Encyclopedia &amp; University</h1>
+            <p class="section-subtitle">
+              Kaffeepedia’s mission: Unify coffee biology, chemistry, physics, sensory, roasting, brewing, systems, and the entire scientific foundation of the craft.
+            </p>
+            <div class="fake-searchbar">
+              <input type="text" disabled placeholder="Search varieties, extraction, water, roasting, sensory…" />
+              <span class="search-pill">Search coming soon</span>
+            </div>
+            <div class="meta-line">Built as a precise, scientifically grounded backbone for the global specialty coffee world.</div>
+            <div class="hero-actions">
+              <a class="button primary" href="mailto:info@kaffeepedia.com?subject=Join%20the%20early%20interest%20list">Join early interest list →</a>
+              <a class="button secondary" href="#enzyklopaedie">Explore the vision</a>
+            </div>
+            <div class="founder-note">Fäïzan Müßtafa Albrecht, Kaffeepedia & Kaffeducation</div>
+          </div>
+          <div class="hero-right">
+            <div class="card launch-roadmap reveal reveal-delay-1">
+              <div class="card-title">Launch roadmap</div>
+              <p>The first deliverables for Kaffeepedia:</p>
+              <ul>
+                <li>Arabica &amp; Robusta A–Z</li>
+                <li>Science volumes — biology, chemistry, physics</li>
+                <li>Sensory &amp; psychophysics framework</li>
+                <li>Kaffeducation learning paths</li>
+              </ul>
+              <div class="card-chips">
+                <span class="chip">Enzyklopädie</span>
+                <span class="chip">Kaffeducation</span>
+                <span class="chip">Coffee Physics</span>
+                <span class="chip">AI Assistant</span>
+              </div>
             </div>
           </div>
-
-          <p class="hero-meta">
-            Built as a precise, scientifically grounded backbone for the global specialty coffee world.
-          </p>
-
-          <div class="hero-cta-row">
-            <a class="btn-primary"
-              href="mailto:change-this-email@your-domain.com?subject=Kaffeepedia%20Early%20Access">
-              Join early interest list →
-            </a>
-            <a class="btn-secondary" href="#enzyklopaedie">
-              Explore the vision
-            </a>
-          </div>
-          <p class="hero-note">
-            Founder: Fäïzan Müßtafa Albrecht · Project: Kaffeepedia & Kaffeducation.
-          </p>
         </div>
-
-        <aside class="hero-card reveal reveal-delay-2">
-          <div class="hero-card-title">Launch roadmap</div>
-          <div class="hero-card-main">
-            Initial release focuses on a rigorous, reference-grade foundation:
-          </div>
-          <ul class="hero-card-list">
-            <li>▸ Arabica &amp; Robusta variety catalogues (A–Z)</li>
-            <li>▸ Core science volumes: biology, chemistry, physics</li>
-            <li>▸ Sensory &amp; psychophysics framework for coffee</li>
-            <li>▸ Kaffeducation paths for baristas, roasters, and researchers</li>
-          </ul>
-          <div class="pill-row">
-            <div class="pill">Enzyklopädie</div>
-            <div class="pill">Kaffeducation</div>
-            <div class="pill">Coffee Physics</div>
-            <div class="pill">AI Assistant</div>
-          </div>
-        </aside>
       </section>
 
-      <!-- ENZYKLOPÄDIE -->
-      <section class="section reveal" id="enzyklopaedie">
+      <!-- Enzyklopädie Section -->
+      <section id="enzyklopaedie" class="section reveal">
         <div class="section-heading">Kaffeepedia Enzyklopädie</div>
-        <h2 class="section-title">A reference backbone for coffee knowledge</h2>
-        <p class="section-subtitle">
-          Inspired by scientific encyclopedias and technical handbooks,
-          the Kaffeepedia Enzyklopädie documents varieties, processing, water,
-          extraction variables, and sensory language with precision.
-        </p>
-        <div class="grid-3">
-          <div class="card reveal reveal-delay-1">
-            <div class="card-label">Volumes</div>
+        <h2 class="section-title">The scientific backbone of coffee knowledge</h2>
+        <p class="section-subtitle">Building a precise, impartial, and multilingual knowledge base for coffee’s biology, chemistry, physics, sensory, and practice.</p>
+        <div class="card-grid">
+          <div class="card info-card reveal reveal-delay-1">
             <div class="card-title">Arabica &amp; Robusta A–Z</div>
-            <div class="card-body">
-              Genetic backgrounds, agronomy, cup profiles, processing
-              compatibility, and roasting notes — structured for both farmers
-              and roasters.
-            </div>
+            <p>Comprehensive entries, varieties, genetics, history, and agricultural science.</p>
           </div>
-          <div class="card reveal reveal-delay-2">
-            <div class="card-label">Structure</div>
+          <div class="card info-card reveal reveal-delay-2">
             <div class="card-title">From molecule to cup</div>
-            <div class="card-body">
-              Entries link botany, chemistry, physics, and sensory outcomes
-              instead of treating them as separate worlds.
-            </div>
+            <p>Chemistry, structure, and processes that shape every aspect of coffee’s journey.</p>
           </div>
-          <div class="card reveal reveal-delay-3">
-            <div class="card-label">Access</div>
-            <div class="card-title">Multilingual &amp; digital-first</div>
-            <div class="card-body">
-              Designed to live as a digital reference with cross-language
-              navigation and deep search for professionals and learners.
-            </div>
+          <div class="card info-card reveal reveal-delay-3">
+            <div class="card-title">Multilingual, digital-first</div>
+            <p>Global access in multiple languages; powerful digital experience for research and education.</p>
           </div>
         </div>
       </section>
 
-      <!-- SCOPE / TOPICS -->
+      <!-- Scope Section -->
       <section class="section reveal">
-        <div class="section-heading">Scope</div>
+        <div class="section-heading">Scope (Topics)</div>
         <h2 class="section-title">A vast map of coffee science and practice</h2>
-        <p class="section-subtitle">
-          Kaffeepedia is built for scale: thousands of entries, cross-references,
-          and learning pathways, spanning agriculture, chemistry, physics,
-          sensory science, technology, and culture.
-        </p>
-        <div class="topics-grid">
-          <div class="topics-panel">
-            <h3 style="font-size:1.02rem; margin-bottom:6px;">Core domains</h3>
-            <p style="font-size:0.9rem; color:var(--text-soft); margin-bottom:12px;">
-              Some of the areas covered in the first iteration of Kaffeepedia:
-            </p>
-            <div class="topics-list">
-              <span><span class="bullet"></span> Arabica &amp; Robusta varieties, hybrids, and cultivars</span>
-              <span><span class="bullet"></span> Processing: washed, natural, honey, experimental</span>
-              <span><span class="bullet"></span> Soil, climate, water activity, moisture, storage</span>
-              <span><span class="bullet"></span> Roast physics, chemistry, RoR, colour and development</span>
-              <span><span class="bullet"></span> Extraction theory, TDS, EY, resistance, pressure</span>
-              <span><span class="bullet"></span> Sensory science, psychophysics, cultural context</span>
-              <span><span class="bullet"></span> Water chemistry, composition, optimisation</span>
-              <span><span class="bullet"></span> Equipment, grinders, refractometers, colourimeters</span>
-            </div>
+        <div class="scope-grid">
+          <div class="scope-left">
+            <div class="scope-subheading">Core domains</div>
+            <ul class="topic-grid">
+              <li>Varieties &amp; cultivars</li>
+              <li>Processing methods</li>
+              <li>Soil, climate &amp; water activity</li>
+              <li>Roast physics &amp; chemistry</li>
+              <li>Extraction theory (TDS, EY, pressure)</li>
+              <li>Sensory science &amp; culture</li>
+              <li>Water chemistry</li>
+              <li>Equipment &amp; measurement</li>
+            </ul>
           </div>
-          <div class="topics-panel">
-            <h3 style="font-size:1.02rem; margin-bottom:6px;">Planned tools</h3>
-            <p style="font-size:0.9rem; color:var(--text-soft); margin-bottom:12px;">
-              Beyond reading, Kaffeepedia will host tools for real-world work:
-            </p>
-            <ul style="list-style:none; font-size:0.9rem; color:var(--text-soft); display:grid; gap:6px;">
-              <li>▸ Interactive lexicon and concept graphs</li>
-              <li>▸ Roast and brew calculators grounded in physics</li>
-              <li>▸ Sensory form systems with better measurement logic</li>
-              <li>▸ Water, cost, and quality modelling tools</li>
-              <li>▸ Deep search across books, entries, and classes</li>
+          <div class="scope-right">
+            <div class="scope-subheading">Planned tools</div>
+            <ul>
+              <li>Lexicon, concept graphs</li>
+              <li>Roast/brew calculators</li>
+              <li>Sensory forms</li>
+              <li>Water/cost/quality tools</li>
+              <li>Deep search across books and classes</li>
             </ul>
           </div>
         </div>
       </section>
 
-      <!-- KAFFEDUCATION -->
-      <section class="section reveal" id="kaffeducation">
+      <!-- Kaffeducation Section -->
+      <section id="kaffeducation" class="section reveal">
         <div class="section-heading">Kaffeducation</div>
         <h2 class="section-title">From enthusiast to coffee scientist</h2>
-        <p class="section-subtitle">
-          Kaffeducation is the educational branch of Kaffeepedia — offering
-          structured learning paths for baristas, roasters, green buyers,
-          sensory analysts, and future coffee researchers.
-        </p>
-        <div class="grid-3">
-          <div class="card reveal reveal-delay-1">
-            <div class="card-label">Pathways</div>
-            <div class="card-title">Foundation to advanced</div>
-            <div class="card-body">
-              Tiered modules covering fundamentals, intermediate practice,
-              and advanced scientific perspectives on coffee.
-            </div>
+        <p class="section-subtitle">Kaffeducation is the scientific &amp; educational arm — deep, structured, and open learning pathways for the entire specialty coffee world.</p>
+        <div class="card-grid">
+          <div class="card info-card reveal reveal-delay-1">
+            <div class="card-title">Pathways</div>
+            <p>Scientifically structured learning, from foundation to advanced topics.</p>
           </div>
-          <div class="card reveal reveal-delay-2">
-            <div class="card-label">Standards</div>
-            <div class="card-title">Aligned with industry &amp; beyond</div>
-            <div class="card-body">
-              Designed to complement existing certifications while going
-              deeper into real science, measurement, and critical thinking.
-            </div>
+          <div class="card info-card reveal reveal-delay-2">
+            <div class="card-title">Standards</div>
+            <p>Aligned with industry, but built for deeper scientific rigor and objectivity.</p>
           </div>
-          <div class="card reveal reveal-delay-3">
-            <div class="card-label">Formats</div>
-            <div class="card-title">Text, visual, and interactive</div>
-            <div class="card-body">
-              Books, visual explanations, and tools that help professionals
-              apply concepts on bar, in lab, and in roastery.
-            </div>
+          <div class="card info-card reveal reveal-delay-3">
+            <div class="card-title">Formats</div>
+            <p>Courses, texts, visual and interactive microlearning.</p>
           </div>
         </div>
       </section>
 
-      <!-- COFFEE SCIENCE -->
-      <section class="section reveal" id="science">
+      <!-- Coffee Science Section -->
+      <section id="science" class="section reveal">
         <div class="section-heading">Coffee Science</div>
         <h2 class="section-title">Physics, chemistry, and sensory — properly connected</h2>
-        <p class="section-subtitle">
-          Kaffeepedia treats coffee as a scientific system: mass, energy,
-          flow, concentration, perception. The goal is to describe quality
-          with transparent, testable concepts — not vague language.
-        </p>
-        <div class="grid-3">
-          <div class="card reveal reveal-delay-1">
-            <div class="card-label">Physics</div>
-            <div class="card-title">Flow, heat, and extraction</div>
-            <div class="card-body">
-              Pressure, resistance, flow rate, temperature fields, and
-              extraction curves expressed in readable, physically grounded models.
-            </div>
+        <p class="section-subtitle">Integrating physical systems, molecular transformations, and psychophysics into a unified knowledge structure.</p>
+        <div class="card-grid">
+          <div class="card info-card reveal reveal-delay-1">
+            <div class="card-title">Physics</div>
+            <p>Flow, heat, extraction, and system modeling.</p>
           </div>
-          <div class="card reveal reveal-delay-2">
-            <div class="card-label">Chemistry</div>
-            <div class="card-title">Compounds and transformations</div>
-            <div class="card-body">
-              From green composition to roast chemistry to brew composition,
-              tied to measurable variables like TDS and extraction yield.
-            </div>
+          <div class="card info-card reveal reveal-delay-2">
+            <div class="card-title">Chemistry</div>
+            <p>Compounds, transformations, molecular structures and chemistry of taste, aroma, and extraction.</p>
           </div>
-          <div class="card reveal reveal-delay-3">
-            <div class="card-label">Sensory</div>
-            <div class="card-title">Psychophysics &amp; perception</div>
-            <div class="card-body">
-              Linking instrument data and human perception, accounting for
-              thresholds, adaptation, context, and cultural differences.
-            </div>
+          <div class="card info-card reveal reveal-delay-3">
+            <div class="card-title">Sensory</div>
+            <p>How psychophysics, perception, and cultural science connect the data to experience.</p>
           </div>
         </div>
       </section>
 
-      <!-- COFFEE AI -->
-      <section class="section reveal" id="ai">
+      <!-- Coffee AI Section -->
+      <section id="ai" class="section reveal">
         <div class="section-heading">Coffee AI</div>
         <h2 class="section-title">A focused assistant for coffee, not generic chat</h2>
-        <p class="section-subtitle">
-          The Kaffeepedia AI is designed as a disciplined, coffee-only assistant:
-          it helps with extraction, roasting, sensory analysis, water, origin
-          questions, and education — without noise.
-        </p>
-        <div class="grid-3">
-          <div class="card reveal reveal-delay-1">
-            <div class="card-label">Use cases</div>
-            <div class="card-title">From bar to lab</div>
-            <div class="card-body">
-              Recipe design, troubleshooting shots, reading roast curves,
-              interpreting refractometer data, and planning experiments.
-            </div>
+        <p class="section-subtitle">Purpose-built tools, assistants and apps for baristas, researchers, and enthusiasts — always precise, never generic.</p>
+        <div class="card-grid">
+          <div class="card info-card reveal reveal-delay-1">
+            <div class="card-title">Use cases</div>
+            <p>From bar to lab — knowledge and calculation tools for professionals and learners.</p>
           </div>
-          <div class="card reveal reveal-delay-2">
-            <div class="card-label">Integration</div>
-            <div class="card-title">Apps &amp; tools</div>
-            <div class="card-body">
-              Designed to live inside Kaffeepedia and Kaffeducation apps
-              as a precise tool for professionals and students.
-            </div>
+          <div class="card info-card reveal reveal-delay-2">
+            <div class="card-title">Integration</div>
+            <p>Apps, calculators, and interfaces for direct support in the field and lab.</p>
           </div>
-          <div class="card reveal reveal-delay-3">
-            <div class="card-label">Philosophy</div>
-            <div class="card-title">Precision, not hype</div>
-            <div class="card-body">
-              Grounded answers, references where possible, and a focus on
-              usable, testable recommendations in real coffee contexts.
-            </div>
+          <div class="card info-card reveal reveal-delay-3">
+            <div class="card-title">Philosophy</div>
+            <p>Designed for precision, not hype — always focused on accurate, actionable knowledge.</p>
           </div>
         </div>
       </section>
     </main>
 
-    <footer>
-      <div class="footer-inner">
-        <div>© <span id="year"></span> Kaffeepedia — Coffee Science · Enzyklopädie · Kaffeducation.</div>
-        <div class="footer-links">
-          <a href="mailto:change-this-email@your-domain.com">Contact</a>
+    <!-- Footer -->
+    <footer class="footer">
+      <div class="footer-content">
+        <div class="footer-left">
+          © <span id="year"></span> Kaffeepedia — Coffee Science · Enzyklopädie · Kaffeducation.
+        </div>
+        <div class="footer-right">
+          <a href="mailto:info@kaffeepedia.com" class="footer-contact">Contact</a>
         </div>
       </div>
     </footer>
-  </div>
-
-  <script>
-    // Set current year in footer
-    document.getElementById("year").textContent = new Date().getFullYear();
-
-    // Time-based theme: light in day, dark at night
-    (function setInitialTheme() {
-      const hour = new Date().getHours();
-      const saved = localStorage.getItem("kaffeepedia-theme");
-      const html = document.documentElement;
-
-      if (saved === "light" || saved === "dark") {
-        html.setAttribute("data-theme", saved);
-      } else {
-        if (hour >= 7 && hour < 19) {
-          html.setAttribute("data-theme", "light");
-        } else {
-          html.setAttribute("data-theme", "dark");
-        }
-      }
-      updateThemeToggleUI();
-    })();
-
-    // Theme toggle button
-    const themeToggle = document.getElementById("themeToggle");
-    const themeIcon = document.getElementById("themeIcon");
-    const themeLabel = document.getElementById("themeLabel");
-
-    function updateThemeToggleUI() {
-      const theme = document.documentElement.getAttribute("data-theme");
-      if (theme === "dark") {
-        themeIcon.textContent = "🌙";
-        themeLabel.textContent = "Dark";
-      } else {
-        themeIcon.textContent = "🌞";
-        themeLabel.textContent = "Light";
-      }
-    }
-
-    themeToggle.addEventListener("click", () => {
-      const html = document.documentElement;
-      const current = html.getAttribute("data-theme") || "light";
-      const next = current === "light" ? "dark" : "light";
-      html.setAttribute("data-theme", next);
-      localStorage.setItem("kaffeepedia-theme", next);
-      updateThemeToggleUI();
-    });
-
-    // Fade-in on scroll using IntersectionObserver
-    const revealElements = document.querySelectorAll(".reveal");
-    const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            entry.target.classList.add("visible");
-            observer.unobserve(entry.target);
-          }
-        });
-      },
-      { threshold: 0.1 }
-    );
-    revealElements.forEach((el) => observer.observe(el));
-  </script>
-</body>
+    <script src="script.js"></script>
+  </body>
 </html>
