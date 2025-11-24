@@ -1,81 +1,70 @@
-// KAFFEEPEDIA.COM Academic Site
-// Theme + Animation + Footer Year
+// KAFFEEPEDIA.COM — Theme, reveal animations, footer year (updated)
+// No emoji icons — SVG icons shown/hidden via CSS; JS only sets data-theme & label
 
-// -------- THEME TOGGLE --------
-
+// ---------------- THEME LOGIC ----------------
 (function() {
-  const prefersDark = () =>
-    window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches;
-  function getCurrentHour() {
-    return new Date().getHours();
-  }
+  // Return current hour (0-23)
+  function getCurrentHour() { return new Date().getHours(); }
 
-  // Theme decision logic
+  // Default based on specified period: 07:00–18:59 => light; else dark
   function getDefaultTheme() {
     const hour = getCurrentHour();
     return (hour >= 7 && hour <= 18) ? "light" : "dark";
   }
 
-  // Load theme preference, check localStorage and time
-  function loadTheme() {
-    let theme = localStorage.getItem("kaffeepedia-theme");
-    if (!theme) theme = getDefaultTheme();
-    document.documentElement.setAttribute("data-theme", theme);
-    updateToggle(theme);
-  }
-
-  // Handle toggle button
-  function updateToggle(theme) {
-    const icon = document.getElementById("theme-icon");
-    const label = document.getElementById("theme-label");
-    if (theme === "dark") {
-      icon.textContent = "🌙";
-      label.textContent = "Dark";
-    } else {
-      icon.textContent = "🌞";
-      label.textContent = "Light";
-    }
-  }
-
-  document.getElementById("theme-toggle").addEventListener("click", function() {
-    let theme = document.documentElement.getAttribute("data-theme");
-    theme = theme === "light" ? "dark" : "light";
+  function setTheme(theme) {
     document.documentElement.setAttribute("data-theme", theme);
     localStorage.setItem("kaffeepedia-theme", theme);
-    updateToggle(theme);
-  });
+    updateToggleLabel(theme);
+  }
+
+  function updateToggleLabel(theme) {
+    const label = document.getElementById("theme-label");
+    if (!label) return;
+    label.textContent = theme === "dark" ? "Dark" : "Light";
+    // icons are handled purely by CSS via [data-theme] selectors
+  }
+
+  function loadTheme() {
+    const stored = localStorage.getItem("kaffeepedia-theme");
+    const theme = stored || getDefaultTheme();
+    document.documentElement.setAttribute("data-theme", theme);
+    updateToggleLabel(theme);
+  }
+
+  const toggleBtn = document.getElementById("theme-toggle");
+  if (toggleBtn) {
+    toggleBtn.addEventListener("click", function() {
+      const current = document.documentElement.getAttribute("data-theme") || getDefaultTheme();
+      const next = current === "light" ? "dark" : "light";
+      setTheme(next);
+    });
+  }
 
   loadTheme();
 })();
 
-// -------- INTERSECTION REVEAL ANIMATION --------
-
-// Simple fade-in for .reveal elements
+// ---------------- INTERSECTION OBSERVER: reveal ----------------
 (function() {
   if ("IntersectionObserver" in window) {
-    const observer = new IntersectionObserver(
-      function(entries) {
-        entries.forEach(function(entry) {
-          if (entry.isIntersecting) {
-            entry.target.classList.add("visible");
-            observer.unobserve(entry.target);
-          }
-        });
-      },
-      { threshold: 0.17 }
-    );
-    document.querySelectorAll(".reveal").forEach(function(el) {
-      observer.observe(el);
-    });
+    const io = new IntersectionObserver((entries, obs) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add("visible");
+          obs.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.17 });
+
+    document.querySelectorAll(".reveal").forEach(el => io.observe(el));
   } else {
-    // Fallback: show all if no IntersectionObserver
-    document.querySelectorAll(".reveal").forEach(function(el) {
-      el.classList.add("visible");
-    });
+    // fallback
+    document.querySelectorAll(".reveal").forEach(el => el.classList.add("visible"));
   }
 })();
 
-// -------- FOOTER YEAR --------
+// ---------------- FOOTER YEAR ----------------
 (function() {
-  document.getElementById("year").textContent = new Date().getFullYear();
+  const el = document.getElementById("year");
+  if (el) el.textContent = new Date().getFullYear();
 })();
