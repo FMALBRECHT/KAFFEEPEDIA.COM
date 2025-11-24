@@ -7,25 +7,29 @@
   <meta name="description" content="Kaffeepedia is the global encyclopedia and university of coffee science: botany, chemistry, physics, roasting, brewing, sensory, and Kaffeducation." />
   <style>
     :root {
-      --bg: #f5f5f7;
+      /* LIGHT MODE – TUM-inspired */
+      --bg: #f5f7fa;
       --bg-elevated: #ffffff;
+      --nav-bg: #0b1f35;            /* dark navy header */
       --text-main: #111111;
-      --text-soft: #555555;
-      --accent: #c27a3a;        /* COFFEE ACCENT – change here if you want blue/green/red */
-      --accent-soft: #f2dfc8;
-      --border-subtle: #e1e2e6;
+      --text-soft: #50566a;
+      --accent: #1366bf;            /* KAFFEEPEDIA BLUE */
+      --accent-soft: #d2e4ff;
+      --border-subtle: #dde0ea;
       --shadow-soft: 0 18px 40px rgba(15, 23, 42, 0.08);
       --max-width: 1120px;
     }
 
     [data-theme="dark"] {
-      --bg: #050608;
-      --bg-elevated: #101118;
-      --text-main: #f7f7f9;
-      --text-soft: #a0a4b4;
-      --accent: #ffb347;        /* a bit more glowing in dark mode */
-      --accent-soft: #2b2116;
-      --border-subtle: #262837;
+      /* DARK MODE – navy + glow blue */
+      --bg: #05060a;
+      --bg-elevated: #0b1f35;
+      --nav-bg: #05060a;
+      --text-main: #f5f7fa;
+      --text-soft: #a1a8c4;
+      --accent: #3d74ff;            /* glow blue in dark mode */
+      --accent-soft: #18264a;
+      --border-subtle: #273452;
       --shadow-soft: 0 24px 60px rgba(0, 0, 0, 0.65);
     }
 
@@ -53,14 +57,14 @@
       flex-direction: column;
     }
 
-    /* NAVBAR – apple.com inspired */
+    /* NAVBAR – dark navy bar, TUM vibe */
     header {
       position: sticky;
       top: 0;
       z-index: 50;
       backdrop-filter: blur(20px);
-      background: color-mix(in srgb, var(--bg) 84%, transparent);
-      border-bottom: 1px solid rgba(180, 181, 190, 0.25);
+      background: var(--nav-bg);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.04);
     }
 
     .nav {
@@ -71,6 +75,7 @@
       align-items: center;
       justify-content: space-between;
       gap: 12px;
+      color: #f5f7fa;
     }
 
     .nav-left {
@@ -83,12 +88,12 @@
       width: 30px;
       height: 30px;
       border-radius: 50%;
-      border: 1px solid var(--border-subtle);
+      border: 1px solid rgba(255, 255, 255, 0.24);
       display: flex;
       align-items: center;
       justify-content: center;
-      background: var(--bg-elevated);
-      box-shadow: 0 4px 12px rgba(0,0,0,0.06);
+      background: rgba(5, 8, 13, 0.9);
+      box-shadow: 0 4px 12px rgba(0,0,0,0.4);
     }
 
     .logo-bean {
@@ -114,13 +119,14 @@
       font-size: 0.95rem;
       letter-spacing: 0.22em;
       text-transform: uppercase;
+      color: #f5f7fa;
     }
 
     .nav-links {
       display: flex;
       gap: 16px;
       font-size: 0.88rem;
-      color: var(--text-soft);
+      color: rgba(245, 247, 250, 0.8);
     }
 
     .nav-links a {
@@ -157,19 +163,20 @@
       text-transform: uppercase;
       letter-spacing: 0.18em;
       border-radius: 999px;
-      border: 1px solid var(--border-subtle);
+      border: 1px solid rgba(255, 255, 255, 0.28);
       padding: 4px 10px;
-      color: var(--text-soft);
+      color: rgba(245, 247, 250, 0.76);
       white-space: nowrap;
+      background: rgba(11, 31, 53, 0.6);
     }
 
     .theme-toggle {
       border-radius: 999px;
-      border: 1px solid var(--border-subtle);
+      border: 1px solid rgba(255, 255, 255, 0.28);
       padding: 4px 10px;
       font-size: 0.8rem;
-      background: var(--bg-elevated);
-      color: var(--text-soft);
+      background: rgba(5, 8, 13, 0.9);
+      color: rgba(245, 247, 250, 0.9);
       cursor: pointer;
       display: flex;
       align-items: center;
@@ -187,7 +194,7 @@
         row-gap: 8px;
       }
       .nav-links {
-        display: none; /* keep it simple for now on mobile */
+        display: none; /* simple mobile for now */
       }
     }
 
@@ -201,7 +208,7 @@
       padding: 48px 18px 32px;
     }
 
-    /* HERO – Apple simple + Encyclopedia search */
+    /* HERO – Apple simplicity + encyclopedia search */
     .hero {
       display: grid;
       grid-template-columns: minmax(0, 3.2fr) minmax(0, 2.3fr);
@@ -278,6 +285,7 @@
       border: 1px solid var(--border-subtle);
       color: var(--text-soft);
       white-space: nowrap;
+      background: var(--bg);
     }
 
     .hero-meta {
@@ -299,7 +307,11 @@
       border: none;
       padding: 9px 18px;
       font-size: 0.9rem;
-      background: linear-gradient(135deg, var(--accent), color-mix(in srgb, var(--accent) 75%, #ffffff 25%));
+      background: linear-gradient(
+        135deg,
+        var(--accent),
+        color-mix(in srgb, var(--accent) 80%, #ffffff 20%)
+      );
       color: #ffffff;
       display: inline-flex;
       align-items: center;
@@ -325,7 +337,7 @@
       color: var(--text-soft);
     }
 
-    /* Right hero card – a bit Epic Games / card UI */
+    /* Right hero card */
     .hero-card {
       background: radial-gradient(circle at top left, var(--accent-soft) 0, var(--bg-elevated) 38%, var(--bg-elevated) 100%);
       border-radius: 24px;
@@ -454,7 +466,6 @@
       color: var(--text-soft);
     }
 
-    /* “Vast encyclopedia” style topics section */
     .topics-grid {
       display: grid;
       grid-template-columns: minmax(0, 2.1fr) minmax(0, 1.9fr);
@@ -509,6 +520,8 @@
       padding: 16px 18px 20px;
       font-size: 0.78rem;
       color: var(--text-soft);
+      background: #0b1f35;
+      color: #d5d9e8;
     }
 
     .footer-inner {
@@ -528,7 +541,7 @@
     }
 
     .footer-links a {
-      color: var(--text-soft);
+      color: #e0e4f5;
       text-decoration: none;
     }
 
@@ -536,7 +549,7 @@
       text-decoration: underline;
     }
 
-    /* FADE-IN + slight motion on scroll */
+    /* FADE-IN SECTIONS */
     .reveal {
       opacity: 0;
       transform: translateY(22px);
@@ -599,7 +612,6 @@
             and fermentation to extraction and perception.
           </p>
 
-          <!-- Encyclopedic search bar -->
           <div class="hero-search">
             <div class="search-shell">
               <span class="search-icon">🔎</span>
@@ -690,7 +702,7 @@
         </div>
       </section>
 
-      <!-- TOPICS / ENCYCLOPEDIA FEEL -->
+      <!-- SCOPE / TOPICS -->
       <section class="section reveal">
         <div class="section-heading">Scope</div>
         <h2 class="section-title">A vast map of coffee science and practice</h2>
@@ -707,12 +719,12 @@
             </p>
             <div class="topics-list">
               <span><span class="bullet"></span> Arabica &amp; Robusta varieties, hybrids, and cultivars</span>
-              <span><span class="bullet"></span> Processing methods: washed, natural, honey, experimental</span>
-              <span><span class="bullet"></span> Soil, climate, water activity, moisture, and storage</span>
+              <span><span class="bullet"></span> Processing: washed, natural, honey, experimental</span>
+              <span><span class="bullet"></span> Soil, climate, water activity, moisture, storage</span>
               <span><span class="bullet"></span> Roast physics, chemistry, RoR, colour and development</span>
-              <span><span class="bullet"></span> Extraction theory, TDS, EY, flow resistance, pressure</span>
+              <span><span class="bullet"></span> Extraction theory, TDS, EY, resistance, pressure</span>
               <span><span class="bullet"></span> Sensory science, psychophysics, cultural context</span>
-              <span><span class="bullet"></span> Water chemistry, composition, and optimisation</span>
+              <span><span class="bullet"></span> Water chemistry, composition, optimisation</span>
               <span><span class="bullet"></span> Equipment, grinders, refractometers, colourimeters</span>
             </div>
           </div>
@@ -722,11 +734,11 @@
               Beyond reading, Kaffeepedia will host tools for real-world work:
             </p>
             <ul style="list-style:none; font-size:0.9rem; color:var(--text-soft); display:grid; gap:6px;">
-              <li>▸ Interactive coffee lexicon and concept graphs</li>
+              <li>▸ Interactive lexicon and concept graphs</li>
               <li>▸ Roast and brew calculators grounded in physics</li>
               <li>▸ Sensory form systems with better measurement logic</li>
               <li>▸ Water, cost, and quality modelling tools</li>
-              <li>▸ Deep search across science books, entries, and classes</li>
+              <li>▸ Deep search across books, entries, and classes</li>
             </ul>
           </div>
         </div>
